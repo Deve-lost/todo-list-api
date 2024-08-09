@@ -256,9 +256,9 @@ class TodoItemController extends Controller
 
         // Initialize
         $data = Items::with('checklists')
-            ->whereHas('checklists', function ($query) {
-                $query->where('user_id', auth()->user()->id);
-            })
+            // ->whereHas('checklists', function ($query) {
+            // $query->where('user_id', auth()->user()->id);
+            // })
             ->where('checklist_id', $id)
             ->where('id', $itemId)
             ->first();
