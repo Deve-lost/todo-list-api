@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChecklistsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,14 @@ use Illuminate\Support\Facades\Route;
 // Auth
 Route::post('login', [AuthController::class, 'signin']);
 Route::post('register', [AuthController::class, 'signup']);
+
+// With Bearer Token
+Route::group(['middleware' => 'auth:api'], function () {
+    // Checklist
+    Route::group(['prefix' => 'checklist'], function () {
+        Route::get('/', [ChecklistsController::class, 'index']);
+        Route::post('/', [ChecklistsController::class, 'store']);
+        Route::put('{id}', [ChecklistsController::class, 'update']);
+        Route::delete('{id}', [ChecklistsController::class, 'destroy']);
+    });
+});
