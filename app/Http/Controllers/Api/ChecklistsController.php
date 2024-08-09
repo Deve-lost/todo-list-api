@@ -97,10 +97,35 @@ class ChecklistsController extends Controller
             DB::rollback();
 
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => '500 Internal Server Error.'
             ], 500);
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        // Check Data
+        $data = Checklists::with('items')->where(['id' => $id, 'user_id' => auth()->user()->id])->first();
+
+        if (!$data) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Data tidak ditemukan.'
+            ], 404);
+        }
+
+        return response()->json([
+            'status'    => true,
+            'message'   => 'Berhasil mendapatkan data.',
+            'data'      => $data
+        ], 200);
     }
 
     /**
@@ -130,7 +155,7 @@ class ChecklistsController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => $validator->errors()->first()
             ], 400);
         }
@@ -140,7 +165,7 @@ class ChecklistsController extends Controller
 
         if (!$data) {
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Data tidak ditemukan.'
             ], 404);
         }
@@ -165,7 +190,7 @@ class ChecklistsController extends Controller
             DB::rollback();
 
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => '500 Internal Server Error.'
             ], 500);
         }
@@ -184,14 +209,14 @@ class ChecklistsController extends Controller
 
         if (!$data) {
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Data tidak ditemukan.'
             ], 404);
         }
 
         if ($data->user_id != auth()->user()->id) {
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Anda tidak memiliki akses untuk mengahpus data orang lain.'
             ], 403);
         }
@@ -199,7 +224,7 @@ class ChecklistsController extends Controller
         $data->delete();
 
         return response()->json([
-            'success'   => true,
+            'status'    => true,
             'message'   => 'Berhasil menghapus data.',
             'data'      => [
                 'id'    => $id,

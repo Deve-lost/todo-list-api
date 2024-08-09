@@ -18,9 +18,9 @@ class CreateItemsTable extends Migration
             $table->foreignId('checklist_id')->constrained();
             $table->string('todo_name', 191);
             $table->tinyInteger('status')->default(0)->comment('0 = Pending, 1 = Done');
-            $table->integer('checklist_by');
-            $table->integer('checklist_by_profile');
-            $table->json('checklist_history');
+            $table->integer('checklist_by')->nullable();
+            $table->integer('checklist_by_profile')->nullable();
+            $table->json('checklist_history')->nullable();
             $table->timestamps();
         });
     }

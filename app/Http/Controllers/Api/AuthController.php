@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'success' => false,
+                'status'  => false,
                 'message' => $validator->errors()->first()
             ], 400);
         }
@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'success' => false,
+                'status'  => false,
                 'message' => 'Username atau password salah.'
             ], 401);
         }
@@ -84,7 +84,7 @@ class AuthController extends Controller
         // Jika validasi gagal
         if ($validator->fails()) {
             return response()->json([
-                'success' => false,
+                'status'  => false,
                 'message' => $validator->errors()->first()
             ], 400);
         }
@@ -97,7 +97,7 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'success' => true,
+            'status'  => true,
             'message' => 'Registrasi berhasil',
             'user'    => $user
         ]);

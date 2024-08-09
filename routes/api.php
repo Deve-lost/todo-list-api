@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChecklistsController;
+use App\Http\Controllers\Api\TodoItemController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,8 +31,17 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Checklist
     Route::group(['prefix' => 'checklist'], function () {
         Route::get('/', [ChecklistsController::class, 'index']);
+        Route::get('detail/{id}', [ChecklistsController::class, 'show']);
         Route::post('/', [ChecklistsController::class, 'store']);
         Route::put('{id}', [ChecklistsController::class, 'update']);
         Route::delete('{id}', [ChecklistsController::class, 'destroy']);
+
+        Route::group(['prefix' => '{id}/item'], function () {
+            Route::get('/', [TodoItemController::class, 'index']);
+            Route::post('/', [TodoItemController::class, 'store']);
+            Route::get('/{itemId}', [TodoItemController::class, 'show']);
+            Route::delete('/{itemId}', [TodoItemController::class, 'destroy']);
+            Route::put('/{itemId}', [TodoItemController::class, 'updateStatus']);
+        });
     });
 });

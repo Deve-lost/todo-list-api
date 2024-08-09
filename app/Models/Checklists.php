@@ -17,4 +17,9 @@ class Checklists extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function items()
+    {
+        return $this->hasMany(Items::class, 'checklist_id');
+    }
 }
