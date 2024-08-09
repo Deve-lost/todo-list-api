@@ -147,7 +147,7 @@ class TodoItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $itemId)
     {
         // Validation
         $validator = Validator::make($request->all(), [
@@ -166,12 +166,18 @@ class TodoItemController extends Controller
         }
 
         // Check Data
-        $checklist = Checklists::where(['id' => $id, 'user_id' => auth()->user()->id])->first();
+        $data = Items::with('checklists')
+            // ->whereHas('checklists', function ($query) {
+            //     $query->where('user_id', auth()->user()->id);
+            // })
+            ->where('checklist_id', $id)
+            ->where('id', $itemId)
+            ->first();
 
-        if (!$checklist) {
+        if (!$data) {
             return response()->json([
                 'success'   => false,
-                'message'   => 'Data Checklist tidak ditemukan.'
+                'message'   => 'Data Todo Item tidak ditemukan.'
             ], 404);
         }
 
@@ -179,7 +185,8 @@ class TodoItemController extends Controller
             // Transaction DB
             DB::beginTransaction();
 
-            $data = Items::create([
+
+            $data->update([
                 'checklist_id'  => $id,
                 'todo_name'     => $request->itemName,
                 'status'        => 0
@@ -189,7 +196,7 @@ class TodoItemController extends Controller
 
             return response()->json([
                 'status'    => true,
-                'message'   => 'Berhasil menambahkan data.',
+                'message'   => 'Berhasil mengubah data.',
                 'data'      => $data
             ], 200);
         } catch (\Throwable $th) {

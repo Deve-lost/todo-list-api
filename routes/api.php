@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('/', [TodoItemController::class, 'store']);
             Route::get('/{itemId}', [TodoItemController::class, 'show']);
             Route::delete('/{itemId}', [TodoItemController::class, 'destroy']);
+            Route::put('rename/{itemId}', [TodoItemController::class, 'update']);
             Route::put('/{itemId}', [TodoItemController::class, 'updateStatus']);
         });
     });
